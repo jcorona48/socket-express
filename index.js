@@ -1,11 +1,14 @@
 import express from "express";
-import { createServer } from "node:http";
+import { createServer } from "http";
 import { Server } from "socket.io";
 const app = express();
 const svr = createServer(app);
 const io = new Server(svr);
-
-let users = [];
+/* type User = {
+    id: string;
+    name: string;
+}; */
+let users /* : User[] */ = [];
 
 const port = 3000;
 
@@ -32,6 +35,7 @@ io.on("connection", (socket) => {
     socket.on("disconnect", () => {
         users = users.filter((user) => user.id !== socket.id);
         console.log("user disconnected");
+        io.emit("join", users);
     });
 });
 
